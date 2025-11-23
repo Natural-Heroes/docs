@@ -1,14 +1,6 @@
 ---
-title: "Agents"
-description: "Description of your new file."
----
-
----
-
 title: Support Answering Agent
-
 description: AI agent that drafts and automates customer support replies using LlamaIndex, Supabase, LangGraph, n8n, and Gorgias.
-
 ---
 
 # Support Answering Agent
@@ -18,13 +10,9 @@ description: AI agent that drafts and automates customer support replies using L
 The **Support Answering Agent** is the primary AI agent that assists with customer support at Natural Heroes. It:
 
 - Reads incoming tickets (via Gorgias).
-
 - Uses our knowledge base and other data sources through LlamaIndex + Supabase (RAG).
-
 - Optionally calls tools (e.g. order lookup).
-
 - Drafts or sends replies.
-
 - Escalates to human agents when needed.
 
 It is invoked from n8n workflows and exposed as an HTTP API endpoint which other systems can call directly.
@@ -38,17 +26,13 @@ It is invoked from n8n workflows and exposed as an HTTP API endpoint which other
 This agent is currently invoked from one or more n8n workflows, e.g.:
 
 - **Workflow:** `gorgias_new_ticket_auto_reply`
-
 - **Trigger:** New ticket created or updated in Gorgias
 
 The workflow:
 
 1. Receives the Gorgias webhook.
-
 2. Normalizes the payload (ticket id, customer info, tags, last messages).
-
 3. Calls the AI Agent API (see below).
-
 4. Writes the response back into Gorgias (draft reply, internal note, or escalation).
 
 ### 2. HTTP API (direct)
@@ -56,59 +40,33 @@ The workflow:
 The agent is exposed as an HTTP endpoint:
 
 - **Method:** `POST`
-
 - **Path:** `/support/answer`
 
 #### Request schema (example)
 
-\`\`\`json
-
+```json
 {
-
   "ticket_id": "12345",
-
   "channel": "email",
-
   "customer": {
-
     "id": "c-001",
-
     "language": "en",
-
     "name": "Jane Doe"
-
   },
-
   "messages": [
-
     {
-
       "role": "user",
-
       "content": "Hi, where is my order #NH1234?"
-
     }
-
   ],
-
   "context": {
-
     "gorgias_tags": ["vip", "shipping"],
-
     "store": "NL",
-
     "brand": "Natural Heroes"
-
   },
-
   "constraints": {
-
     "tone": "friendly",
-
     "max_tokens": 400,
-
     "allow_auto_send": false
-
   }
-
 }
